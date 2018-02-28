@@ -1,0 +1,114 @@
+@font-face {
+    font-family: adlanta;
+    src: url("font/adlanta/Adlanta Font/Adlanta.otf") format("opentype");
+}
+
+@font-face {
+    font-family: arista;
+    src: url("font/arista-pro/Arista-Pro/Arista-Pro-Regular-trial.ttf") format("truetype");
+}
+
+body{
+    background-color: rgba(71, 71, 66, 0.5);
+}
+
+@media (max-width: 1000px) {
+    body{
+        background-color: gold;
+    }
+}
+
+.mainAch img{
+    float: left;
+    padding-right: 30px;
+    margin-top: 120px;
+}
+
+.mainAch table{
+    position: absolute;
+    margin-top: 120px;
+    margin-left: 650px;
+}
+
+.nav ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: rgba(190, 186, 148, 0.3);
+    text-align: center;
+    border-radius: 25px;
+}
+
+.nav{
+    position: relative;
+    display: inline-block;
+}
+
+.menu{
+    display: none;
+    z-index: 1;
+}
+
+.nav:hover .menu{
+    display: block;
+}
+
+.nav ul li {
+    list-style: none;
+    display: inline-block;
+    font-family: arista;
+}
+
+.nav ul li a {
+    display: block;
+    color: black;
+    text-align: center;
+    padding: 14px 30px;
+    text-decoration: none;
+    text-transform: uppercase;
+    transition: background-color 0.5s ease;
+}
+
+.nav ul li a:hover{
+    background-color: rgba(2, 152, 52, 0.5);
+}
+
+#test4{
+    width: 600px;
+    height: 800px;
+}
+
+#peleStats, tr, td{
+    padding: 90px;
+    border: 1px solid black;
+    border-collapse: collapse;
+}
+
+#dis1{
+    display: none;
+}
+
+#cell1:hover #def1{
+    display: none;
+}
+
+#cell1:hover #dis1{
+    display: block;
+}
+
+#dis8{
+    display: none;
+}
+
+#dis8 ul{
+    list-style-type: square;
+}
+
+#cell8:hover #def8{
+    display: none;
+}
+
+#cell8:hover #dis8{
+    display: inline;
+}

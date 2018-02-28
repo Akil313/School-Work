@@ -1,0 +1,109 @@
+@font-face {
+    font-family: adlanta;
+    src: url("font/adlanta/Adlanta Font/Adlanta.otf") format("opentype");
+}
+
+@font-face {
+    font-family: arista;
+    src: url("font/arista-pro/Arista-Pro/Arista-Pro-Regular-trial.ttf") format("truetype");
+}
+
+body{
+    background: #000000;
+    font-family: arista;
+}
+
+.background{
+    height: 99%;
+    width: 99%;
+    background: url(imgs/cele.gif);
+    background-repeat: no-repeat;
+    background-size: cover;
+    z-index: -1;
+    position: absolute;
+}
+
+input[type=text], input[type=number], input[type=email], input[type=date],
+input[type=search], input[type=number], input[type=password], textarea, select{
+    padding: 12px 20px;
+    margin: 8px 0;
+    margin-top: 10px;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+input[type=text], input[type=number], input[type=email], input[type=date],
+input[type=password]{
+    margin-right: 10px;
+}
+
+input{
+    text-align: center;
+    margin: auto;
+}
+
+.signUp{
+    margin-left: 30%;
+    width: 35%;
+    border-radius: 5px;
+    background-color: rgba(242, 242, 242, 0.4);
+    padding: 20px;
+    position: absolute;
+    margin-top: 50px;
+}
+
+form{
+    display: block;
+    text-align: center;
+}
+
+select{
+    margin-bottom: 40px;
+    position: relative;
+}
+
+.nav ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: rgba(190, 186, 148, 0.3);
+    text-align: center;
+    border-radius: 25px;
+}
+
+.nav{
+    position: relative;
+    display: inline-block;
+}
+
+.menu{
+    display: none;
+    z-index: 1;
+}
+
+.nav:hover .menu{
+    display: block;
+}
+
+.nav ul li {
+    list-style: none;
+    display: inline-block;
+    font-family: arista;
+}
+
+.nav ul li a {
+    display: block;
+    color: black;
+    text-align: center;
+    padding: 14px 30px;
+    text-decoration: none;
+    text-transform: uppercase;
+    transition: background-color 0.5s ease;
+}
+
+.nav ul li a:hover{
+    background-color: rgba(2, 152, 52, 0.5);
+}

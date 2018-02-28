@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script src="newsJS.js"></script>
+    <link rel="stylesheet" type="text/css" href="newsStyle.css">
+    <title>Document</title>
+</head>
+
+<body>
+
+    <header class="background">
+        
+    </header>
+
+    <div class="nav">
+        <img src="imgs/pele_logo.jpeg" alt="logo" height="100" width="100">
+        <div class="menu">
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="career.html">Stats</a></li>
+                <li><a href="news.html">Newsettler</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="signUp">
+        <form action="#index.html" onsubmit="return false" method="get">
+            First Name
+            <input type="text" name="fName" id="fName">
+
+            Last Name
+            <input type="text" name="lName" id="lName"><br>
+
+            Age
+            <input type="number" name="age" id="regAge">
+
+            Email
+            <input type="email" name="email" id="regEmail"><br>
+
+            Password
+            <input type="password" name="firstPass" id="fPass"><br>
+
+            Confirm Password
+            <input type="password" name="confPass" id="cPass"><br>
+
+            Date of Birth
+            <input type="date" name="dob" id="dob"><br>
+
+            Favourite Team
+            <input type="search" name="fTeam" id="fTeam"><br>
+
+            Position you play
+            <select name="position" id="pos">
+                <option value="goalkeeper">Goalkeeper</option>
+                <option value="defender">Defender</option>
+                <option value="midfielder">Midfielder</option>
+                <option value="foward">Foward</option>
+            </select><br>
+
+            How did you find out about this site?<br>
+            <textarea name="reason" id="regResaon" cols="30" rows="10"></textarea><br>
+            <input type="submit" value="Submit" id="submit" >
+        </form>
+    </div>
+</body>
+</html>
