@@ -1,8 +1,13 @@
+#816003000 - Akil Hosang
+#Client
+#This program is responsible for the multiple layers of encryption using RSA, DES and DiffieHellman on the secret message to send to program B.
 import socket
 import Crypto
+import pickle
 from Crypto.PublicKey import RSA
 from Crypto.Cipher import DES
 
+#getSharedKey is the diffieHellman method of sharing a secret key to program B
 def getSharedKey():
     p = 13
     q = 23
@@ -10,16 +15,14 @@ def getSharedKey():
     progASecret = 17
 
     A = (p**progASecret)%q
-
-    print "Sending..."
     s.send(str(A))
 
     B = int(s.recv(1024))
-    print "Done Recieving"
     sharedSecretKey = (B**progASecret)%q
 
     return A, B, sharedSecretKey
 
+#encCeasarCipher is the Ceasar Cipher method but only for encryption.
 def encCeasarCipher(msg, key):
     LETTERS = 'abcdefghijklmnopqrstuvwxyz'
     ULETTERS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
@@ -38,7 +41,7 @@ def encCeasarCipher(msg, key):
 
                 translated += LETTERS[num]
                 
-            else:
+            elif symbol in ULETTERS:
                 num = ULETTERS.find(symbol)
                 num += key
 
@@ -48,39 +51,41 @@ def encCeasarCipher(msg, key):
                     num += len(ULETTERS)
 
                 translated += ULETTERS[num]
+            else:
+                translated+=symbol
         else:
             translated += symbol
 
     return translated
 
+#Initializing server variables
 s = socket.socket()
 host = socket.gethostname()
 port = 1717
 s.connect((host, port))
 
 f = open("NoWar.dat", 'rb')
+
 msg = f.read(1024)
 f.close()
 
+#Generation of RSA objects
 rsaKey = RSA.generate(1024)
-
-rsaPrivateObj = rsaKey
 rsaPublicObj = rsaKey.publickey()
-rsaPrivateKey = rsaKey.exportKey(format='PEM')
-rsaPublicKey = rsaKey.publickey().exportKey(format='PEM')
+rsaPrivateKey = rsaKey.exportKey()
+rsaPublicKey = rsaPublicObj.exportKey()
 
+#DES key 
 key = 'I am Dog'
-
 des = DES.new(key)
 
 rsaPrivateKey += ' ' * (8 - len(rsaPrivateKey) % 8) # Pad the key if needed
 
 encRSAPrivateKey = des.encrypt(rsaPrivateKey)
 
-#privateKey = des.decrypt(encryptedRSAPrivateKey).strip()
+encRSAMsg = rsaPublicObj.encrypt(msg, 32)[0]
 
-encRSAMsg = rsaPublicObj.encrypt(msg, "random")[0]
-
+#Saving private and public key to dat file
 f = open("privatekey.dat", 'wb')
 f.write(encRSAPrivateKey)
 f.close()
@@ -89,28 +94,18 @@ f = open("publickey.dat", 'wb')
 f.write(rsaPublicKey)
 f.close()
 
-f = open("secrets.dat", 'wb')
-f.write(encRSAMsg)
-f.close()
-
-print "Sending..."
-s.send(encRSAMsg)
-
-print "Done Sending"
-
 A, B, sharedSecretKey = getSharedKey()
 
+#Encrypting encrypted RSA message, encrypted DES key and encrypted private key with ceasar cipher
 ceasarEncRSAMsg = encCeasarCipher(encRSAMsg, sharedSecretKey)
 ceasarEncDESKey = encCeasarCipher(key, sharedSecretKey)
 ceasarEncPrivateKey = encCeasarCipher(encRSAPrivateKey, sharedSecretKey)
 
-s.send(bytes(ceasarEncRSAMsg))
-print s.recv(1024)
-s.send(bytes(ceasarEncDESKey))
-print s.recv(1024)
-s.send(bytes(ceasarEncPrivateKey))
-print s.recv(1024)
+#Sending ceasar encrypted variables to program B
+s.send(ceasarEncRSAMsg)
+s.recv(1024)
+s.send(ceasarEncDESKey)
+s.recv(8)
+s.send(ceasarEncPrivateKey)
+s.recv(1024)
 
-print "\n\nTHE RSA MSG IS \n", encRSAMsg
-print "\nTHE DES KEY IS \n", key
-print "\nTHE PRIVATE KEY IS \n", encRSAPrivateKey

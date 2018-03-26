@@ -1,0 +1,17 @@
+#BlueJ class context
+comment0.target=Vehicle
+comment0.text=\r\n\ Write\ a\ description\ of\ class\ Vehicle\ here.\r\n\r\n\ @author\ (your\ name)\r\n\ @version\ (a\ version\ number\ or\ a\ date)\r\n
+comment1.params=regNo\ type\ rate
+comment1.target=Vehicle(java.lang.String,\ java.lang.String,\ double)
+comment1.text=\r\n\ Constructor\ for\ objects\ of\ class\ Vehicle\r\n
+comment2.params=
+comment2.target=double\ getDailyRentalRate()
+comment3.params=
+comment3.target=java.lang.String\ toString()
+comment4.params=vl
+comment4.target=boolean\ canBeOperated(VehicleLicense)
+comment5.params=vl
+comment5.target=java.lang.String\ getLicenseError(VehicleLicense)
+comment6.params=
+comment6.target=java.lang.String\ getType()
+numComments=7

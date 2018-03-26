@@ -1,8 +1,13 @@
+#816003000 - Akil Hosang
+#Program B - Server
+#This program is responsible for recieving all the encrypted files and using the secret key obtained from the Diffie Hellman to descrypt all necessary variables.
 import socket
 import Crypto
+import pickle
 from Crypto.PublicKey import RSA
 from Crypto.Cipher import DES
 
+#getSharedKey is the diffieHellman method of sharing a secret key to program A
 def getSharedKey():
     p = 13
     q = 23
@@ -14,10 +19,10 @@ def getSharedKey():
     sharedSecretKey = (A**progBSecret)%q
 
     c.send(str(B))
-    print("Done Recieving")
 
     return A, B, sharedSecretKey
 
+#encCeasarCipher is the Ceasar Cipher method but only for decryption.
 def decCeasarCipher(msg, key):
     LETTERS = 'abcdefghijklmnopqrstuvwxyz'
     ULETTERS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
@@ -36,7 +41,7 @@ def decCeasarCipher(msg, key):
 
                 translated += LETTERS[num]
                 
-            else:
+            elif symbol in ULETTERS:
                 num = ULETTERS.find(symbol)
                 
                 num -= key
@@ -47,65 +52,51 @@ def decCeasarCipher(msg, key):
                     num += len(ULETTERS)
 
                 translated += ULETTERS[num]
+            else:
+                translated+=symbol
         else:
             translated += symbol
 
     return translated
 
+#Initializing server variables
 s = socket.socket()
 host = socket.gethostname()
 port = 1717
 s.bind(("", port))
 
-f = open('secrets.dat', 'wb')
 s.listen(1)
 
-print "Waiting for connection..."
-
 c, addr = s.accept()
-print "Connection made from", addr
-print "Receiving..."
-
-encRSAMsg = c.recv(1024)
-f.write(encRSAMsg)
-
-f = open('secrets.dat', 'rb')
-encRSAMsg = f.read(1024)
-
-f.close()
 
 A, B, sharedSecretKey = getSharedKey()
 
-print "Recieving..."
-
+#Recieving ceasar encrypted variables
 ceasarEncRSAMsg = c.recv(1024)
 c.send("Ceasar Encrypted RSA Message Recieved")
-ceasarEncDESKey = c.recv(1024)
+
+ceasarEncDESKey = c.recv(8)
 c.send("Ceasar Encrypted DES Key Recieved")
+
 ceasarEncPrivateKey = c.recv(1024)
 c.send("Ceasar Encrypted RSA Message Recieved")
 
-print "Done Recieving"
 c.close()
 
-
+#Decryption of ceasear encrypted variables
 encRSAMsg = decCeasarCipher(ceasarEncRSAMsg, sharedSecretKey)
 key = decCeasarCipher(ceasarEncDESKey, sharedSecretKey)
 encRSAPrivateKey = decCeasarCipher(ceasarEncPrivateKey, sharedSecretKey)
 
-print "\n\nTHE RSA MSG IS \n", encRSAMsg
-print "\nTHE DES KEY IS \n", key
-print "\nTHE PRIVATE KEY IS \n", encRSAPrivateKey
-
 des = DES.new(key)
 
+#Decryption of encrypted RSA private key using the DES key
 privateKey = des.decrypt(encRSAPrivateKey)
 
-print privateKey
+privateKey = RSA.importKey(privateKey)
 
-privateRSAKey = RSA.importKey(privateKey)
-
-decrypted = privateRSAKey.decrypt(encRSAMsg)
+#Decryption of encrypted RSA message using privateKey
+decrypted = privateKey.decrypt(encRSAMsg)
 
 print decrypted
 

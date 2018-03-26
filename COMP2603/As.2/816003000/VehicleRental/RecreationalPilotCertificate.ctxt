@@ -1,0 +1,10 @@
+#BlueJ class context
+comment0.target=RecreationalPilotCertificate
+comment0.text=\r\n\ Write\ a\ description\ of\ class\ RecreationalPilotCertificate\ here.\r\n\r\n\ @author\ (your\ name)\r\n\ @version\ (a\ version\ number\ or\ a\ date)\r\n
+comment1.params=expiryDate\ holderName\ dateOfBirth\ regNo
+comment1.target=RecreationalPilotCertificate(java.time.LocalDate,\ java.lang.String,\ java.time.LocalDate,\ java.lang.String)
+comment2.params=
+comment2.target=java.lang.String\ getLicenseType()
+comment3.params=hours
+comment3.target=void\ setHoursFlightTime(int)
+numComments=4
