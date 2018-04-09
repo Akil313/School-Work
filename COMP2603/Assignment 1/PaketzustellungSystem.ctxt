@@ -1,0 +1,23 @@
+#BlueJ class context
+comment0.target=PaketzustellungSystem
+comment1.params=
+comment1.target=PaketzustellungSystem()
+comment10.params=flightNumber\ code
+comment10.target=java.lang.String\ updateFlightStatus(java.lang.String,\ char)
+comment2.params=
+comment2.target=int\ getNumflights()
+comment3.params=packageDestination\ owner\ weight
+comment3.target=boolean\ addPackage(java.lang.String,\ java.lang.String,\ double)
+comment4.params=flightNumber\ flightDestination
+comment4.target=boolean\ addFlight(java.lang.String,\ java.lang.String)
+comment5.params=destination
+comment5.target=Flight\ getFlightByDestination(java.lang.String)
+comment6.params=ID
+comment6.target=java.lang.String\ listPackage(int)
+comment7.params=owner
+comment7.target=java.lang.String\ listPackages(java.lang.String)
+comment8.params=
+comment8.target=java.lang.String\ listPackages()
+comment9.params=
+comment9.target=java.lang.String\ listFlights()
+numComments=11

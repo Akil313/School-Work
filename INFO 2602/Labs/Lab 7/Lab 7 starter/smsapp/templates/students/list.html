@@ -1,0 +1,15 @@
+<html>
+    <head>
+        <title>List of Students</title>
+    </head>
+    <body>
+        <h2>Students</h2>
+        {% if students %}
+        <ul>
+            {% for student in students %}
+            <li> {{student.name}} </li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+    </body>
+</html>
