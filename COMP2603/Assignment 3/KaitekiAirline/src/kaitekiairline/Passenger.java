@@ -13,7 +13,8 @@ public class Passenger {
     String firstName = new String();
     String lastName = new String();
     String passportNo = new String();
-    HashMap<Flight, BoardingPass> boardingPasses = new HashMap<>();
+    
+    HashMap<String, BoardingPass> boardingPasses = new HashMap<>();
     
     public Passenger(String fName, String lName, String passNo){
         firstName = fName;
@@ -22,12 +23,19 @@ public class Passenger {
     }
     
     public String issueBoardingPass(Flight f, BoardingPass bp){
-        boardingPasses.put(f, bp);
-        return "Completed";
+        if(boardingPasses.get(f.getNo()) == null){
+            boardingPasses.put(f.getNo(), bp);
+            return "Completed";
+        }
+        return null;
     }
     
     public BoardingPass getBoardingPass(Flight f){
-        return boardingPasses.get(f);
+        return boardingPasses.get(f.getNo());
+    }
+    
+    public boolean replaceBoardingPass(Flight f, BoardingPass oldPass, BoardingPass newPass){
+        return boardingPasses.replace(f.getNo(), oldPass, newPass);
     }
     
     public String getFirstName(){
@@ -52,5 +60,15 @@ public class Passenger {
     
     public String getPassNo(){
         return passportNo;
+    }
+    
+    public String toString(){
+        String s = "First Name: " + this.firstName + "\nLast Name: " + this.lastName + "\nPassport No: " + this.passportNo;
+        int x = 0;
+        for(BoardingPass bp : boardingPasses.values()){
+            s = s + "\nBoarding Pass " + x + "\n" + bp.toString();
+            x++;
+        }
+        return s;
     }
 }

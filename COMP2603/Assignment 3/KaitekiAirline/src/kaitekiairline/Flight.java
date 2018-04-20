@@ -15,33 +15,18 @@ public class Flight {
     String destination;
     String origin;
     HashMap <String, BoardingPass> seats = new HashMap <>();
+    Collection <String> validSeatNos = new ArrayList <>();
     
     public Flight(String flightNo, String destination, String origin){
         this.flightNo = flightNo;
         this.destination = destination;
         this.origin = origin;
+        populateValidSeats(1, 20);
     }
     
-    private boolean validSeat(String seatNo){
-        if(seatNo.length() == 2){
-            if(seatNo.charAt(0) - '0' < 1){
-                return false;
-            }
-        }else
-        if(seatNo.length() == 3){
-            if( Integer.parseInt(seatNo.substring(0, 2)) < 10 || Integer.parseInt(seatNo.substring(0, 2)) > 20){
-                return false;
-            }
-        }else{
-            return false;
-        }
-        char seatLet = seatNo.charAt(seatNo.length()-1);
+    public boolean validSeat(String seatNo){
         
-        if(seatLet != 'A' && seatLet != 'B' && seatLet != 'C'){
-            return false;
-        }
-        
-        return true;
+        return validSeatNos.contains(seatNo);
     }
     
     public String getEmptySeat(){
@@ -66,13 +51,6 @@ public class Flight {
                 }
             }
         }
-            
-//                for(BoardingPass pass : seats){
-//                    if(pass.getSeatNo().equals(seatNo)){
-//                        found = true;
-//                        break;
-//                    }
-//                }
 
         return null;
     }
@@ -83,20 +61,9 @@ public class Flight {
             return false;
         }
         
-//        if(!seatNo.equals(bp.getSeatNo())){
-//            return false;
-//        }
-        
-//        for(BoardingPass pass : seats){
-//            if(pass.getSeatNo().equals(seatNo)){
-//                valid = true;
-//                break;
-//            }
-//        }
-//        
-//        if(valid == false){
-//            return false;
-//        }
+        if(seats.get(seatNo) != null){
+            return false;
+        }
 
         if(seats.get(seatNo) != null){
             seats.remove(seatNo);
@@ -151,7 +118,6 @@ public class Flight {
                 seatMap = seatMap + 'x';
             }
             seatMap = seatMap + "\t";
-            System.out.print(seatNo);
             
             //Processing the current number(x) with the seat letter B
             if(x > 0 && x < 10){
@@ -167,7 +133,6 @@ public class Flight {
                 seatMap = seatMap + 'x';
             }
             seatMap = seatMap + "\t";
-            System.out.print(seatNo);
             
             //Processing the current number(x) with the seat letter C
             if(x > 0 && x < 10){
@@ -183,8 +148,6 @@ public class Flight {
                 seatMap = seatMap + 'x';
             }
             seatMap = seatMap + "\t";
-            System.out.print(seatNo);
-            
             
             seatMap = seatMap + "\n";
         }
@@ -206,5 +169,35 @@ public class Flight {
     
     public String toString(){
         return seats.toString();
+    }
+    
+    private void populateValidSeats(int min, int max){
+        String seatNo = new String();
+        
+        for(int x=min; x<=max; x++){
+            if(x > 0 && x < 10){
+                seatNo = Character.toString((char)(x + (int)'0'));
+            }else{
+                seatNo = String.valueOf(x);
+            }
+            seatNo = seatNo + 'A';
+            validSeatNos.add(seatNo);
+            
+            if(x > 0 && x < 10){
+                seatNo = Character.toString((char)(x + (int)'0'));
+            }else{
+                seatNo = String.valueOf(x);
+            }
+            seatNo = seatNo + 'B';
+            validSeatNos.add(seatNo);
+            
+            if(x > 0 && x < 10){
+                seatNo = Character.toString((char)(x + (int)'0'));
+            }else{
+                seatNo = String.valueOf(x);
+            }
+            seatNo = seatNo + 'C';
+            validSeatNos.add(seatNo);
+        }
     }
 }

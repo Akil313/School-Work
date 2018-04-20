@@ -5,6 +5,7 @@
  */
 package kaitekiairline;
 import java.io.Console;
+import java.util.*;
 /**
  *
  * @author Akil313
@@ -13,14 +14,18 @@ public class KaitekiAirlineGUI extends javax.swing.JFrame {
     /**
      * Creates new form KaitekiAirlineGUI
      */
+    KaitekiAirlineSystem kas = new KaitekiAirlineSystem();
+    
     public KaitekiAirlineGUI() {
         initComponents();
         setTitle("KaitekiAirline");
-        KaitekiAirlineSystem kas = new KaitekiAirlineSystem();
-        System.out.println(kas.addPassenger("Nataliya", "Hosang", "2345", "NA412"));
-        System.out.println(kas.findPassenger("2345"));
-        System.out.println(kas.issueBoardingPass("2345", "NA412"));
-        jTextArea3.setText(kas.getBoardingPass("2345", "NA412"));
+        jPanel2.setVisible(false);
+        seatMap.setText(kas.getSeatMap(String.valueOf(flightComboBox.getSelectedItem())));
+        
+//        System.out.println(kas.addPassenger("Nataliya", "Hosang", "2345"));
+//        System.out.println(kas.findPassenger("2345"));
+//        System.out.println(kas.issueBoardingPass("2345", "NA412"));
+//        jTextArea2.setText(kas.getSeatMap("NA412"));
     }
 
     /**
@@ -35,9 +40,9 @@ public class KaitekiAirlineGUI extends javax.swing.JFrame {
         jPanel1 = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
-        jTextArea2 = new javax.swing.JTextArea();
+        seatMap = new javax.swing.JTextArea();
         jScrollPane3 = new javax.swing.JScrollPane();
-        jTextArea3 = new javax.swing.JTextArea();
+        statusBox = new javax.swing.JTextArea();
         jPanel3 = new javax.swing.JPanel();
         pFirstName = new javax.swing.JLabel();
         pLastName = new javax.swing.JLabel();
@@ -46,11 +51,11 @@ public class KaitekiAirlineGUI extends javax.swing.JFrame {
         pFirstNameField = new javax.swing.JTextField();
         pLastNameField = new javax.swing.JTextField();
         passportNoField = new javax.swing.JTextField();
-        jComboBox1 = new javax.swing.JComboBox<>();
+        flightComboBox = new javax.swing.JComboBox<>();
         jPanel4 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTextArea1 = new javax.swing.JTextArea();
+        bpDetails = new javax.swing.JTextArea();
         clearBtn = new javax.swing.JButton();
         issueBoardPassBtn = new javax.swing.JButton();
         addPassengerBtn = new javax.swing.JButton();
@@ -70,13 +75,16 @@ public class KaitekiAirlineGUI extends javax.swing.JFrame {
         jLabel2.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         jLabel2.setText("Seat Map");
 
-        jTextArea2.setColumns(20);
-        jTextArea2.setRows(5);
-        jScrollPane2.setViewportView(jTextArea2);
+        seatMap.setEditable(false);
+        seatMap.setColumns(20);
+        seatMap.setRows(5);
+        jScrollPane2.setViewportView(seatMap);
 
-        jTextArea3.setColumns(20);
-        jTextArea3.setRows(5);
-        jScrollPane3.setViewportView(jTextArea3);
+        statusBox.setEditable(false);
+        statusBox.setColumns(20);
+        statusBox.setLineWrap(true);
+        statusBox.setRows(5);
+        jScrollPane3.setViewportView(statusBox);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -124,11 +132,16 @@ public class KaitekiAirlineGUI extends javax.swing.JFrame {
 
         pFirstNameField.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                pFirstNameFieldActionPerformed(evt);
+                addPassenger(evt);
             }
         });
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        flightComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "NA412", "AH1210", "NF52" }));
+        flightComboBox.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                changeFlight(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -148,7 +161,7 @@ public class KaitekiAirlineGUI extends javax.swing.JFrame {
                         .addComponent(pFirstNameField, javax.swing.GroupLayout.DEFAULT_SIZE, 273, Short.MAX_VALUE)
                         .addComponent(pLastNameField)
                         .addComponent(passportNoField))
-                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(flightComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel3Layout.setVerticalGroup(
@@ -169,7 +182,7 @@ public class KaitekiAirlineGUI extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(flightNum)
-                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(flightComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(26, Short.MAX_VALUE))
         );
 
@@ -178,29 +191,47 @@ public class KaitekiAirlineGUI extends javax.swing.JFrame {
         jLabel1.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         jLabel1.setText("Boarding Pass Details");
 
-        jTextArea1.setColumns(20);
-        jTextArea1.setRows(5);
-        jScrollPane1.setViewportView(jTextArea1);
+        bpDetails.setEditable(false);
+        bpDetails.setColumns(20);
+        bpDetails.setLineWrap(true);
+        bpDetails.setRows(5);
+        jScrollPane1.setViewportView(bpDetails);
 
         clearBtn.setText("Clear");
         clearBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 clearBtnActionPerformed(evt);
+                clear(evt);
             }
         });
 
         issueBoardPassBtn.setText("Issue Boarding Pass");
+        issueBoardPassBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                issueBoardingPass(evt);
+            }
+        });
 
         addPassengerBtn.setText("Add Passenger");
         addPassengerBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                addPassengerBtnActionPerformed(evt);
+                addPassenger(evt);
             }
         });
 
         findPassengerBtn.setText("Find Passenger");
+        findPassengerBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                findPassenger(evt);
+            }
+        });
 
         findBoardPassBtn.setText("Find Boarding Pass");
+        findBoardPassBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                findBoardingPass(evt);
+            }
+        });
 
         updatePassDetailsBtn.setText("Update Passenger Details");
 
@@ -211,21 +242,24 @@ public class KaitekiAirlineGUI extends javax.swing.JFrame {
             .addGroup(jPanel4Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1)
                     .addGroup(jPanel4Layout.createSequentialGroup()
-                        .addComponent(jLabel1)
-                        .addGap(0, 0, Short.MAX_VALUE))
+                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jScrollPane1)
+                            .addGroup(jPanel4Layout.createSequentialGroup()
+                                .addComponent(jLabel1)
+                                .addGap(0, 0, Short.MAX_VALUE)))
+                        .addContainerGap())
                     .addGroup(jPanel4Layout.createSequentialGroup()
                         .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                             .addComponent(clearBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(issueBoardPassBtn, javax.swing.GroupLayout.DEFAULT_SIZE, 186, Short.MAX_VALUE)
                             .addComponent(addPassengerBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(updatePassDetailsBtn, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 186, Short.MAX_VALUE)
-                            .addComponent(findBoardPassBtn, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(findPassengerBtn, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
-                .addContainerGap())
+                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addComponent(updatePassDetailsBtn, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 186, Short.MAX_VALUE)
+                                .addComponent(findBoardPassBtn, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(findPassengerBtn, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 186, javax.swing.GroupLayout.PREFERRED_SIZE)))))
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -235,10 +269,10 @@ public class KaitekiAirlineGUI extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(addPassengerBtn)
-                    .addComponent(updatePassDetailsBtn))
-                .addGap(18, 18, 18)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(updatePassDetailsBtn)
+                    .addComponent(addPassengerBtn, javax.swing.GroupLayout.Alignment.TRAILING))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(issueBoardPassBtn)
                     .addComponent(findBoardPassBtn))
@@ -250,6 +284,11 @@ public class KaitekiAirlineGUI extends javax.swing.JFrame {
         );
 
         changeSeatCheck.setText("Change Seat");
+        changeSeatCheck.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                changeSeatCheckStateChanged(evt);
+            }
+        });
 
         jPanel2.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
 
@@ -260,6 +299,7 @@ public class KaitekiAirlineGUI extends javax.swing.JFrame {
         changeSeatBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 changeSeatBtnActionPerformed(evt);
+                changeSeat(evt);
             }
         });
 
@@ -318,15 +358,24 @@ public class KaitekiAirlineGUI extends javax.swing.JFrame {
                         .addComponent(changeSeatCheck)
                         .addGap(18, 18, 18)
                         .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(25, Short.MAX_VALUE))
+                .addContainerGap(32, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void pFirstNameFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pFirstNameFieldActionPerformed
+    private void addPassenger(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addPassenger
         // TODO add your handling code here:
-    }//GEN-LAST:event_pFirstNameFieldActionPerformed
+        String firstName = pFirstNameField.getText().trim();
+        String lastName = pLastNameField.getText().trim();
+        String passportNo = passportNoField.getText().trim();
+        
+        if(!firstName.equals("") && !lastName.equals("") && !passportNo.equals("")){
+            statusBox.setText(kas.addPassenger(firstName, lastName, passportNo));
+        }else{
+            statusBox.setText("The first name, last name and passport number fields must be filled");
+        }
+    }//GEN-LAST:event_addPassenger
 
     private void clearBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_clearBtnActionPerformed
         // TODO add your handling code here:
@@ -336,9 +385,113 @@ public class KaitekiAirlineGUI extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_changeSeatBtnActionPerformed
 
-    private void addPassengerBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addPassengerBtnActionPerformed
+    private void changeSeatCheckStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_changeSeatCheckStateChanged
         // TODO add your handling code here:
-    }//GEN-LAST:event_addPassengerBtnActionPerformed
+        if(changeSeatCheck.isSelected()){
+            jPanel2.setVisible(true);
+        }else{
+            jPanel2.setVisible(false);
+        }
+    }//GEN-LAST:event_changeSeatCheckStateChanged
+
+    private void issueBoardingPass(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_issueBoardingPass
+        // TODO add your handling code here:
+        String passportNo = passportNoField.getText();
+        
+        if(passportNo != ""){
+            Passenger pass = kas.getPassenger(passportNo);
+            Flight f = kas.getFlight(String.valueOf(flightComboBox.getSelectedItem()));
+            
+            BoardingPass bp = new BoardingPass(f);
+            bp.setSeatNo(f.getEmptySeat());
+            
+            if(bp.getSeatNo() == null){
+                statusBox.setText("The flight is full!");
+            }else{
+                String result = pass.issueBoardingPass(f, bp);
+                if(result != null){
+                    bp.addPassenger(pass);
+                    f.assignSeat(bp.getSeatNo(), bp);
+                    statusBox.setText(result);
+                    bpDetails.setText(bp.toString());
+                    seatMap.setText(kas.getSeatMap(String.valueOf(flightComboBox.getSelectedItem())));
+                }else{
+                    statusBox.setText("A boarding pass for this passenger has already been issued.");
+                }
+            }
+        }else{
+            statusBox.setText("Passenger field must not be empty");
+        }
+    }//GEN-LAST:event_issueBoardingPass
+
+    private void changeFlight(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_changeFlight
+        // TODO add your handling code here:
+        seatMap.setText(kas.getSeatMap(String.valueOf(flightComboBox.getSelectedItem())));
+    }//GEN-LAST:event_changeFlight
+
+    private void findBoardingPass(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_findBoardingPass
+        // TODO add your handling code here:
+        String passportNo = passportNoField.getText();
+        Flight f = kas.getFlight(String.valueOf(flightComboBox.getSelectedItem()));
+        
+        if(passportNo != "" && f != null){
+            Passenger p = kas.getPassenger(passportNo);
+            
+            if(p != null){
+                bpDetails.setText(kas.getBoardingPass(passportNo, f.getNo()));
+            }
+        }
+    }//GEN-LAST:event_findBoardingPass
+
+    private void clear(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_clear
+        // TODO add your handling code here:
+        pFirstNameField.setText("");
+        pLastNameField.setText("");
+        passportNoField.setText("");
+        flightComboBox.setSelectedIndex(0);
+        bpDetails.setText("");
+        changeSeatCheck.setSelected(false);
+        newSeatField.setText("");
+        statusBox.setText("");
+    }//GEN-LAST:event_clear
+
+    private void findPassenger(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_findPassenger
+        // TODO add your handling code here:
+        String passportNo = passportNoField.getText();
+        Flight f = kas.getFlight(String.valueOf(flightComboBox.getSelectedItem()));
+        
+        if(passportNo != "" && f != null){
+            Passenger p = kas.getPassenger(passportNo);
+            
+            if(p != null){
+                pFirstNameField.setText(p.getFirstName());
+                pLastNameField.setText(p.getLastName());
+            }
+        }
+    }//GEN-LAST:event_findPassenger
+
+    private void changeSeat(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_changeSeat
+        // TODO add your handling code here:
+        String newSeatNo = newSeatField.getText().trim();
+        String passportNo = passportNoField.getText();
+        Flight f = kas.getFlight(String.valueOf(flightComboBox.getSelectedItem()));
+        
+        if(!newSeatNo.equals("")){
+            Passenger p = kas.getPassenger(passportNo);
+            
+            if(p != null){
+                BoardingPass bp = p.getBoardingPass(f);
+                String valid = kas.updateSeat(passportNo, String.valueOf(flightComboBox.getSelectedItem()), newSeatNo);
+                
+                seatMap.setText(kas.getSeatMap(String.valueOf(flightComboBox.getSelectedItem())));
+                statusBox.setText(valid);
+            }else{
+                statusBox.setText("Passenger does nto exist with that passport number.");
+            }
+        }else{
+            statusBox.setText("Seat field cannot be empty!");
+        }
+    }//GEN-LAST:event_changeSeat
 
     /**
      * @param args the command line arguments
@@ -378,14 +531,15 @@ public class KaitekiAirlineGUI extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addPassengerBtn;
+    private javax.swing.JTextArea bpDetails;
     private javax.swing.JButton changeSeatBtn;
     private javax.swing.JCheckBox changeSeatCheck;
     private javax.swing.JButton clearBtn;
     private javax.swing.JButton findBoardPassBtn;
     private javax.swing.JButton findPassengerBtn;
+    private javax.swing.JComboBox<String> flightComboBox;
     private javax.swing.JLabel flightNum;
     private javax.swing.JButton issueBoardPassBtn;
-    private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -396,9 +550,6 @@ public class KaitekiAirlineGUI extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
-    private javax.swing.JTextArea jTextArea1;
-    private javax.swing.JTextArea jTextArea2;
-    private javax.swing.JTextArea jTextArea3;
     private javax.swing.JTextField newSeatField;
     private javax.swing.JLabel pFirstName;
     private javax.swing.JTextField pFirstNameField;
@@ -406,6 +557,8 @@ public class KaitekiAirlineGUI extends javax.swing.JFrame {
     private javax.swing.JTextField pLastNameField;
     private javax.swing.JTextField passportNoField;
     private javax.swing.JLabel passportNum;
+    private javax.swing.JTextArea seatMap;
+    private javax.swing.JTextArea statusBox;
     private javax.swing.JButton updatePassDetailsBtn;
     // End of variables declaration//GEN-END:variables
 }

@@ -14,9 +14,7 @@ public class BoardingPass {
     Passenger p;
     Flight f;
     
-    public BoardingPass(String seatNo, Passenger p, Flight f){
-       this.seatNo = seatNo;
-       this.p = p;
+    public BoardingPass(Flight f){
        this.f = f;
     }
     
@@ -27,6 +25,10 @@ public class BoardingPass {
     public boolean setSeatNo(String seatNo){
         this.seatNo = seatNo;
         return true;
+    }
+    
+    public void addPassenger(Passenger p){
+        this.p = p;
     }
     
     @Override
